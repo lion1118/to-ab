@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🎤 鳌拜演唱会 | 雷恩的啵啵应援</title>
+    <title>🎵 夏夜烟火 | 雷恩与鳌拜的音乐情缘</title>
     <style>
         * {
             margin: 0;
@@ -15,10 +15,11 @@
         
         body {
             overflow: hidden;
-            background: linear-gradient(135deg, #1a0b2e 0%, #0d1b2a 100%);
-            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
             height: 100vh;
             color: white;
+            touch-action: none;
         }
         
         #canvas {
@@ -31,8 +32,8 @@
             z-index: 1;
         }
         
-        /* ====== 舞台UI ====== */
-        .stage-ui {
+        /* ====== 音乐厅界面 ====== */
+        .voice-room {
             position: fixed;
             top: 20px;
             left: 20px;
@@ -43,52 +44,155 @@
             align-items: center;
         }
         
+        .mic-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 107, 107, 0.3);
+        }
+        
+        .mic-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            animation: micPulse 2s ease-in-out infinite;
+        }
+        
+        .room-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .room-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #ffd166;
+        }
+        
+        .room-audience {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        /* ====== 角色卡片 ====== */
+        .character-cards {
+            position: fixed;
+            bottom: 120px;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 0 20px;
+        }
+        
         .character-card {
             background: rgba(0, 0, 0, 0.7);
             border-radius: 15px;
-            padding: 12px 18px;
+            padding: 15px;
+            min-width: 150px;
             backdrop-filter: blur(10px);
             border: 2px solid;
-            min-width: 150px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .character-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
         }
         
         #aobai-card {
-            border-color: #ff3366;
+            border-color: rgba(255, 107, 107, 0.5);
+        }
+        
+        #aobai-card::before {
+            background: linear-gradient(90deg, #ff6b6b, #ff8e53);
         }
         
         #lein-card {
-            border-color: #33ccff;
+            border-color: rgba(107, 179, 255, 0.5);
+        }
+        
+        #lein-card::before {
+            background: linear-gradient(90deg, #6bb3ff, #53c5ff);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .character-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .aobai-avatar {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+        }
+        
+        .lein-avatar {
+            background: linear-gradient(45deg, #6bb3ff, #53c5ff);
         }
         
         .character-name {
             font-size: 16px;
             font-weight: bold;
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
         
-        .character-title {
+        .character-desc {
             font-size: 12px;
             opacity: 0.8;
-            margin-bottom: 8px;
+            margin-top: 2px;
         }
         
-        .character-stats {
-            display: flex;
-            gap: 10px;
-            font-size: 14px;
-        }
-        
-        .stat-item {
+        .mood-indicator {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 10px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .mood-icon {
+            font-size: 20px;
+            transition: transform 0.3s;
+        }
+        
+        .mood-text {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
         }
         
         /* ====== 互动按钮 ====== */
-        .interaction-buttons {
+        .interaction-panel {
             position: fixed;
             bottom: 30px;
             left: 50%;
@@ -99,252 +203,162 @@
         }
         
         .interaction-btn {
-            background: rgba(255, 255, 255, 0.15);
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(0, 0, 0, 0.6);
             color: white;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 24px;
             cursor: pointer;
             backdrop-filter: blur(10px);
             transition: all 0.3s;
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            position: relative;
         }
         
         .interaction-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
         }
         
         .interaction-btn:active {
-            transform: translateY(0);
+            transform: scale(0.95);
         }
         
-        /* ====== 角色形象 ====== */
-        .character {
-            position: fixed;
-            width: 120px;
-            height: 180px;
-            z-index: 50;
-            pointer-events: none;
-            transition: all 0.5s ease;
-        }
+        .btn-1 { border: 2px solid #ff6b6b; }
+        .btn-2 { border: 2px solid #6bb3ff; }
+        .btn-3 { border: 2px solid #ffd166; }
+        .btn-4 { border: 2px solid #a663cc; }
         
-        #aobai {
-            bottom: 100px;
-            left: 20%;
-            transform: scaleX(-1); /* 面向右边 */
-        }
-        
-        #lein {
-            bottom: 100px;
-            right: 20%;
-        }
-        
-        .character-body {
+        .btn-label {
             position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
+            bottom: -25px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            white-space: nowrap;
         }
         
-        /* 鳌拜 - 歌手造型 */
-        .aobai-head {
-            width: 50px;
-            height: 50px;
-            background: #ff99cc;
-            border-radius: 50%;
-            margin: 0 auto 10px;
-            position: relative;
-            border: 3px solid #ff3366;
-        }
-        
-        .aobai-hair {
-            width: 70px;
-            height: 20px;
-            background: #ff3366;
-            border-radius: 50% 50% 0 0;
-            position: absolute;
-            top: -10px;
-            left: -10px;
-        }
-        
-        .microphone {
-            position: absolute;
-            top: 30px;
-            right: -30px;
-            width: 30px;
-            height: 50px;
-            background: #333;
-            border-radius: 5px;
-            transform: rotate(-30deg);
-        }
-        
-        .microphone:before {
-            content: '';
-            position: absolute;
-            top: -10px;
-            left: 5px;
-            width: 20px;
-            height: 20px;
-            background: #666;
-            border-radius: 50%;
-        }
-        
-        .music-note {
-            position: absolute;
-            font-size: 24px;
-            animation: floatNote 2s ease-in-out infinite;
-            opacity: 0;
-        }
-        
-        /* 雷恩 - 粉丝造型 */
-        .lein-head {
-            width: 50px;
-            height: 50px;
-            background: #99ccff;
-            border-radius: 50%;
-            margin: 0 auto 10px;
-            position: relative;
-            border: 3px solid #33ccff;
-        }
-        
-        .lein-hair {
-            width: 70px;
-            height: 15px;
-            background: #33ccff;
-            border-radius: 50% 50% 0 0;
-            position: absolute;
-            top: -5px;
-            left: -10px;
-        }
-        
-        .heart-glasses {
-            position: absolute;
-            top: 15px;
-            left: 0;
-            width: 50px;
-            height: 20px;
-            background: transparent;
-            border: 3px solid #ff3366;
-            border-radius: 50%;
-        }
-        
-        .heart-glasses:before {
-            content: '❤';
-            position: absolute;
-            top: -5px;
-            left: 18px;
-            font-size: 20px;
-            color: #ff3366;
-        }
-        
-        .fan-sign {
-            position: absolute;
-            top: 30px;
-            left: -40px;
-            width: 30px;
-            height: 40px;
-            background: linear-gradient(45deg, #ff3366, #ff6699);
-            border-radius: 5px;
-            transform: rotate(15deg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            font-weight: bold;
-        }
-        
-        /* ====== 对话气泡 ====== */
+        /* ====== 对话框 ====== */
         .dialogue-bubble {
             position: fixed;
-            background: rgba(255, 255, 255, 0.95);
-            color: #333;
-            padding: 12px 18px;
-            border-radius: 20px;
-            max-width: 250px;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 15px;
+            max-width: 300px;
             z-index: 200;
             opacity: 0;
             transform: translateY(20px);
             transition: all 0.3s;
             font-size: 14px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            line-height: 1.4;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
         }
         
-        .dialogue-bubble:before {
+        .dialogue-bubble.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .dialogue-bubble::before {
             content: '';
             position: absolute;
-            bottom: -10px;
-            width: 20px;
-            height: 20px;
-            background: rgba(255, 255, 255, 0.95);
+            bottom: -8px;
+            width: 16px;
+            height: 16px;
+            background: rgba(0, 0, 0, 0.9);
             transform: rotate(45deg);
         }
         
-        #aobai-dialogue {
-            bottom: 300px;
-            left: 25%;
+        .dialogue-owner {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-weight: bold;
         }
         
-        #aobai-dialogue:before {
-            left: 30px;
+        .dialogue-content {
+            font-size: 14px;
         }
         
-        #lein-dialogue {
-            bottom: 300px;
-            right: 25%;
-        }
-        
-        #lein-dialogue:before {
-            right: 30px;
-        }
-        
-        /* ====== 舞台效果 ====== */
-        .stage-lights {
+        /* ====== 歌曲面板 ====== */
+        .song-panel {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 2;
-            pointer-events: none;
-            background: radial-gradient(
-                ellipse at 30% 20%,
-                rgba(255, 51, 102, 0.1) 0%,
-                transparent 50%
-            ), radial-gradient(
-                ellipse at 70% 20%,
-                rgba(51, 204, 255, 0.1) 0%,
-                transparent 50%
-            );
+            top: 90px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 15px;
+            z-index: 100;
+            min-width: 250px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 107, 107, 0.3);
         }
         
-        .spotlight {
-            position: fixed;
-            top: 0;
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(
-                ellipse at center,
-                rgba(255, 255, 255, 0.2) 0%,
-                transparent 70%
-            );
-            filter: blur(20px);
-            z-index: 2;
-            pointer-events: none;
+        .current-song {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
         }
         
-        /* ====== 成就展示 ====== */
-        .achievement-show {
+        .song-icon {
+            font-size: 24px;
+            color: #ff6b6b;
+        }
+        
+        .song-info {
+            flex: 1;
+        }
+        
+        .song-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #ffd166;
+            margin-bottom: 5px;
+        }
+        
+        .song-desc {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .song-history {
+            max-height: 120px;
+            overflow-y: auto;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .history-item {
+            font-size: 12px;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .history-title {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .history-mood {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        /* ====== 特殊时刻 ====== */
+        .special-moment {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.9), rgba(255, 140, 0, 0.9));
-            color: #000;
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.9), rgba(255, 142, 83, 0.9));
+            color: white;
             padding: 30px;
             border-radius: 20px;
             z-index: 300;
@@ -353,60 +367,71 @@
             opacity: 0;
             pointer-events: none;
             transition: all 0.5s;
-            box-shadow: 0 20px 50px rgba(255, 215, 0, 0.3);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 50px rgba(255, 107, 107, 0.3);
         }
         
-        .achievement-show.show {
+        .special-moment.show {
             opacity: 1;
         }
         
-        .achievement-title {
-            font-size: 28px;
+        .moment-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .moment-title {
+            font-size: 24px;
             font-weight: bold;
             margin-bottom: 10px;
         }
         
-        .achievement-desc {
-            font-size: 18px;
+        .moment-desc {
+            font-size: 16px;
+            opacity: 0.9;
             margin-bottom: 20px;
         }
         
+        /* ====== 烟花特效 ====== */
+        .fireworks-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+        
         /* ====== 动画定义 ====== */
-        @keyframes floatNote {
-            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+        @keyframes micPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255, 107, 107, 0); }
+        }
+        
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(0); opacity: 0; }
             50% { opacity: 1; }
-            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+            100% { transform: translateY(-100px) scale(1); opacity: 0; }
         }
         
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.1); opacity: 1; }
-        }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-        
-        @keyframes glow {
-            0%, 100% { filter: drop-shadow(0 0 10px currentColor); }
-            50% { filter: drop-shadow(0 0 20px currentColor); }
+        @keyframes sparkle {
+            0% { transform: rotate(0deg) scale(0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: rotate(180deg) scale(1); opacity: 0; }
         }
         
         /* ====== 响应式调整 ====== */
         @media (max-width: 768px) {
-            .stage-ui { flex-direction: column; gap: 10px; }
-            .character-card { min-width: 120px; }
-            #aobai { left: 10%; }
-            #lein { right: 10%; }
-            .interaction-buttons { flex-wrap: wrap; justify-content: center; }
-            .interaction-btn { padding: 10px 15px; }
+            .character-cards { flex-direction: column; align-items: center; }
+            .interaction-panel { flex-wrap: wrap; justify-content: center; }
+            .interaction-btn { width: 50px; height: 50px; font-size: 20px; }
+            .song-panel { top: 80px; right: 10px; left: 10px; }
         }
     </style>
 </head>
@@ -414,190 +439,380 @@
     <!-- 主画布 -->
     <canvas id="canvas"></canvas>
     
-    <!-- 舞台灯光 -->
-    <div class="stage-lights"></div>
-    <div class="spotlight" id="spotlight-aobai"></div>
-    <div class="spotlight" id="spotlight-lein"></div>
+    <!-- 烟花容器 -->
+    <div class="fireworks-container" id="fireworksContainer"></div>
     
-    <!-- 舞台UI -->
-    <div class="stage-ui">
-        <div class="character-card" id="aobai-card">
-            <div class="character-name">
-                <span style="color: #ff3366;">🎤</span> 鳌拜
+    <!-- 音乐厅界面 -->
+    <div class="voice-room">
+        <div class="mic-status">
+            <div class="mic-icon">🎤</div>
+            <div class="room-info">
+                <div class="room-title">鳌拜的语音厅</div>
+                <div class="room-audience">
+                    <span>👥 在线听众:</span>
+                    <span id="audienceCount">1</span>
+                    <span>(❤️ 头号粉丝: 雷恩)</span>
+                </div>
             </div>
-            <div class="character-title" style="color: #ff99cc;">实力派歌手</div>
-            <div class="character-stats">
-                <div class="stat-item">
-                    <span style="color: #ff3366;">🎵</span>
-                    <span id="aobai-energy">100</span>
+        </div>
+    </div>
+    
+    <!-- 歌曲面板 -->
+    <div class="song-panel">
+        <div class="current-song">
+            <div class="song-icon">🎵</div>
+            <div class="song-info">
+                <div class="song-title" id="currentSongTitle">正在演唱：《勾指起誓》</div>
+                <div class="song-desc" id="currentSongMood">💕 甜蜜时刻 | 雷恩专属点歌</div>
+            </div>
+        </div>
+        <div class="song-history">
+            <div class="history-item">
+                <span class="history-title">《夏夜最后的烟火》</span>
+                <span class="history-mood">✨ 纪念时刻</span>
+            </div>
+            <div class="history-item">
+                <span class="history-title">《最后一首情歌》</span>
+                <span class="history-mood">😢 初遇回忆</span>
+            </div>
+            <div class="history-item">
+                <span class="history-title">《今夜有雨》</span>
+                <span class="history-mood">☔️ 相遇</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 角色卡片 -->
+    <div class="character-cards">
+        <div class="character-card" id="aobai-card">
+            <div class="card-header">
+                <div class="character-avatar aobai-avatar">🎤</div>
+                <div>
+                    <div class="character-name" style="color: #ff6b6b;">鳌拜</div>
+                    <div class="character-desc">语音厅歌手 | 23岁 | 白羊座</div>
                 </div>
-                <div class="stat-item">
-                    <span style="color: #ff3366;">❤</span>
-                    <span id="aobai-fans">1</span>
-                </div>
+            </div>
+            <div class="mood-indicator">
+                <div class="mood-icon" id="aobaiMoodIcon">😊</div>
+                <div class="mood-text" id="aobaiMoodText">心情不错</div>
             </div>
         </div>
         
         <div class="character-card" id="lein-card">
-            <div class="character-name">
-                <span style="color: #33ccff;">🌟</span> 雷恩
-            </div>
-            <div class="character-title" style="color: #99ccff;">头号粉丝</div>
-            <div class="character-stats">
-                <div class="stat-item">
-                    <span style="color: #33ccff;">💖</span>
-                    <span id="lein-energy">100</span>
-                </div>
-                <div class="stat-item">
-                    <span style="color: #33ccff;">🎫</span>
-                    <span id="lein-tickets">∞</span>
+            <div class="card-header">
+                <div class="character-avatar lein-avatar">🌟</div>
+                <div>
+                    <div class="character-name" style="color: #6bb3ff;">雷恩</div>
+                    <div class="character-desc">头号粉丝 | 22岁 | 射手座</div>
                 </div>
             </div>
-        </div>
-    </div>
-    
-    <!-- 角色形象 -->
-    <div class="character" id="aobai">
-        <div class="character-body">
-            <div class="aobai-head">
-                <div class="aobai-hair"></div>
+            <div class="mood-indicator">
+                <div class="mood-icon" id="leinMoodIcon">😍</div>
+                <div class="mood-text" id="leinMoodText">超级开心</div>
             </div>
-            <div class="microphone"></div>
         </div>
-    </div>
-    
-    <div class="character" id="lein">
-        <div class="character-body">
-            <div class="lein-head">
-                <div class="lein-hair"></div>
-                <div class="heart-glasses"></div>
-            </div>
-            <div class="fan-sign">鳌</div>
-        </div>
-    </div>
-    
-    <!-- 对话气泡 -->
-    <div class="dialogue-bubble" id="aobai-dialogue">
-        谢谢雷恩！这首《啵啵能量》送给你！🎵
-    </div>
-    
-    <div class="dialogue-bubble" id="lein-dialogue">
-        鳌拜姐姐！我爱你！💖
     </div>
     
     <!-- 互动按钮 -->
-    <div class="interaction-buttons">
-        <button class="interaction-btn" id="send-kiss-btn">
-            <span style="color: #ff3366;">💋</span> 发送啵啵
+    <div class="interaction-panel">
+        <button class="interaction-btn btn-1" id="sendGiftBtn">
+            💝
+            <span class="btn-label">送礼物</span>
         </button>
-        <button class="interaction-btn" id="sing-song-btn">
-            <span style="color: #33ccff;">🎤</span> 演唱歌曲
+        <button class="interaction-btn btn-2" id="requestSongBtn">
+            🎵
+            <span class="btn-label">点歌</span>
         </button>
-        <button class="interaction-btn" id="cheer-btn">
-            <span style="color: #ffcc00;">🎉</span> 应援打call
+        <button class="interaction-btn btn-3" id="tellJokeBtn">
+            😂
+            <span class="btn-label">逗开心</span>
         </button>
-        <button class="interaction-btn" id="duet-btn">
-            <span style="color: #ff66ff;">🎶</span> 合唱互动
+        <button class="interaction-btn btn-4" id="confessBtn">
+            💌
+            <span class="btn-label">悄悄话</span>
         </button>
     </div>
     
-    <!-- 成就展示 -->
-    <div class="achievement-show" id="achievementShow">
-        <div class="achievement-title" id="achievementTitle"></div>
-        <div class="achievement-desc" id="achievementDesc"></div>
-        <div style="font-size: 48px;" id="achievementIcon"></div>
+    <!-- 对话框 -->
+    <div class="dialogue-bubble" id="dialogueBubble"></div>
+    
+    <!-- 特殊时刻弹窗 -->
+    <div class="special-moment" id="specialMoment">
+        <div class="moment-icon" id="momentIcon">🎆</div>
+        <div class="moment-title" id="momentTitle">特殊时刻</div>
+        <div class="moment-desc" id="momentDesc"></div>
     </div>
 
     <script>
-    // ========== 游戏配置 ==========
-    const CONFIG = {
-        maxParticles: 1000,
-        particleLifetime: 200,
-        aobaiPosition: { x: window.innerWidth * 0.2, y: window.innerHeight * 0.7 },
-        leinPosition: { x: window.innerWidth * 0.8, y: window.innerHeight * 0.7 },
-        interactionDistance: 150
-    };
-    
-    // ========== 游戏状态 ==========
-    let particles = [];
-    let interactionCount = 0;
-    let canvas, ctx;
-    let gameState = {
+    // ========== 游戏数据 ==========
+    const GAME_STATE = {
+        relationship: {
+            level: 1,
+            intimacy: 50,
+            trust: 50,
+            understanding: 50
+        },
         aobai: {
-            energy: 100,
-            fans: 1,
-            singing: false,
-            position: CONFIG.aobaiPosition
+            mood: 70,
+            energy: 80,
+            affection: 30,
+            songs: [],
+            favoriteSongs: ['勾指起誓', '夏夜最后的烟火', '最后一首情歌']
         },
         lein: {
+            mood: 90,
             energy: 100,
-            tickets: Infinity,
-            cheering: false,
-            position: CONFIG.leinPosition
+            affection: 80,
+            secretFeelings: 50
         },
-        relationshipLevel: 1,
-        achievements: new Set()
+        currentSong: null,
+        specialMoments: [],
+        dayCount: 1
     };
     
-    // ========== 对话系统 ==========
+    // ========== 真实歌单 ==========
+    const REAL_SONGS = [
+        // 初遇系列
+        {
+            id: 1,
+            title: "最后一首情歌",
+            artist: "苏琛",
+            mood: "melancholy",
+            lyrics: "这是最后一首情歌，也是我们的第一首情歌",
+            unlockDay: 1,
+            special: "firstMeeting"
+        },
+        {
+            id: 2,
+            title: "今夜有雨",
+            artist: "队长",
+            mood: "rainy",
+            lyrics: "今夜有雨，我在雨中等你",
+            unlockDay: 1,
+            special: "rainyNight"
+        },
+        // 甜蜜时刻
+        {
+            id: 3,
+            title: "勾指起誓",
+            artist: "洛天依/言和",
+            mood: "sweet",
+            lyrics: "拉钩上吊一百年不许变，骗人的是小狗",
+            unlockDay: 3,
+            special: "promise"
+        },
+        {
+            id: 4,
+            title: "夏夜最后的烟火",
+            artist: "张齐山",
+            mood: "romantic",
+            lyrics: "你像夏夜最后的烟火，照亮我整个星空",
+            unlockDay: 5,
+            special: "fireworks"
+        },
+        // 深情系列
+        {
+            id: 5,
+            title: "水星记",
+            artist: "郭顶",
+            mood: "deep",
+            lyrics: "还要多远才能进入你的心，还要多久才能和你接近",
+            unlockDay: 7
+        },
+        {
+            id: 6,
+            title: "形容",
+            artist: "沈以诚",
+            mood: "gentle",
+            lyrics: "就像是那灰色天空中的小雨，下下停停不动声色淋湿土地",
+            unlockDay: 10
+        },
+        {
+            id: 7,
+            title: "下雨天",
+            artist: "南拳妈妈",
+            mood: "cozy",
+            lyrics: "下雨天了怎么办，我好想你",
+            unlockDay: 12
+        },
+        {
+            id: 8,
+            title: "撒野",
+            artist: "凯瑟喵",
+            mood: "passionate",
+            lyrics: "我想抬头暖阳春草，你给我简单拥抱",
+            unlockDay: 15
+        },
+        // 特别时刻
+        {
+            id: 9,
+            title: "好想爱这个世界啊",
+            artist: "华晨宇",
+            mood: "healing",
+            lyrics: "想过离开，以这种方式存在",
+            unlockDay: 20,
+            special: "healing"
+        },
+        {
+            id: 10,
+            title: "勇气",
+            artist: "棉子",
+            mood: "brave",
+            lyrics: "我爱你，无畏人海的拥挤",
+            unlockDay: 25,
+            special: "confession"
+        }
+    ];
+    
+    // ========== 人物对话库 ==========
     const DIALOGUES = {
-        aobai: [
-            "谢谢雷恩的支持！🎵",
-            "这首《啵啵能量》送给你！",
-            "你是最棒的粉丝！💖",
-            "让我们一起合唱吧！🎤",
-            "啵啵~ ❤️"
-        ],
-        lein: [
-            "鳌拜姐姐我爱你！😍",
-            "我要听一万场演唱会！",
-            "为你打call一辈子！🌟",
-            "收集所有专辑！💿",
-            "你是我的偶像！✨"
-        ]
+        // 鳌拜的对话
+        aobai: {
+            happy: [
+                "今天唱歌状态超好！谢谢雷恩一直在～",
+                "看到你送的礼物了，好可爱！😊",
+                "这首《夏夜最后的烟火》是我们一起看的第一个夏天呢",
+                "虽然有时候你笨笨的，但真的很贴心",
+                "有你这个朋友真好，真的"
+            ],
+            annoyed: [
+                "雷恩！你又乱开玩笑啦！😠",
+                "不要总说些奇怪的话嘛...我们是好朋友呀",
+                "今天有点累，想安静唱会儿歌",
+                "你送的礼物太贵重了，朋友之间不用这样的",
+                "为什么你总说这些话...怪不好意思的"
+            ],
+            touched: [
+                "雷恩...谢谢你陪我走过那段最难的日子",
+                "只有你记得我每一首歌的意义",
+                "雨夜那首《最后一首情歌》，你是第一个点我歌的人",
+                "有时候觉得，有你这样的朋友，唱歌都更有意义了",
+                "这首《勾指起誓》，是唱给你的承诺"
+            ],
+            confused: [
+                "雷恩今天怎么怪怪的...",
+                "你最近总是欲言又止的样子",
+                "我们只是好朋友，对吧？",
+                "有时候你的关心...让我有点不知所措",
+                "不要对我太好，我会害怕失去"
+            ]
+        },
+        
+        // 雷恩的对话
+        lein: {
+            adoring: [
+                "鳌拜的声音是世界上最美的！😍",
+                "今天也为了听你唱歌来的～",
+                "你唱《勾指起誓》的时候，心跳都漏了一拍",
+                "想为你承包整个语音厅的礼物榜！",
+                "你的每首歌我都会听一千遍"
+            ],
+            nervous: [
+                "那个...鳌拜，我有话想对你说...",
+                "今天是不是又说错话惹你生气了",
+                "只是朋友...吗？可是我想...",
+                "好想告诉你我的心意，但又怕失去你",
+                "看着你笑，我就觉得世界都亮了"
+            ],
+            caring: [
+                "累了吗？要注意休息哦",
+                "不管发生什么，我都会支持你",
+                "你的梦想就是我的梦想",
+                "今天下雨了，记得带伞",
+                "要按时吃饭，不要总熬夜练歌"
+            ],
+            playful: [
+                "鳌拜～笑一个嘛！😜",
+                "猜猜我今天给你准备了什么惊喜？",
+                "要不要听个笑话？保证让你笑出声！",
+                "今天也是超级喜欢鳌拜的一天！",
+                "你生气的样子也好可爱啊～"
+            ]
+        }
     };
+    
+    // ========== 笑话库 ==========
+    const JOKES = [
+        "为什么歌手过马路要戴耳机？因为要听红绿灯的节奏！",
+        "鳌拜你知道为什么音乐厅的WiFi信号最好吗？因为音符会传播信号！",
+        "如果我是音符，你就是我的调号，让我整个人都走调了～",
+        "雷恩：我想点一首歌 鳌拜：什么歌？ 雷恩：我们的主题曲《好朋友》",
+        "为什么我总来听你唱歌？因为你的声音比咖啡还提神！",
+        "鳌拜：今天唱什么好呢？ 雷恩：唱《为什么雷恩这么可爱》",
+        "如果唱歌能发电，鳌拜你一个人就能点亮整个城市！"
+    ];
+    
+    // ========== 特殊时刻记忆 ==========
+    const SPECIAL_MOMENTS = [
+        {
+            id: 1,
+            title: "雨夜初遇",
+            description: "那个下雨的夜晚，雷恩第一次点进鳌拜的语音厅",
+            song: "最后一首情歌",
+            icon: "☔️"
+        },
+        {
+            id: 2,
+            title: "夏夜烟火",
+            description: "一起看烟花的夜晚，鳌拜唱了《夏夜最后的烟火》",
+            song: "夏夜最后的烟火",
+            icon: "🎆"
+        },
+        {
+            id: 3,
+            title: "勾指约定",
+            description: "雷恩生日那天，鳌拜为她唱了《勾指起誓》",
+            song: "勾指起誓",
+            icon: "🤞"
+        },
+        {
+            id: 4,
+            title: "重逢",
+            description: "鳌拜眼睛疼后第一次复出，又唱了《今夜有雨》",
+            song: "今夜有雨",
+            icon: "🌧️"
+        }
+    ];
     
     // ========== 粒子系统 ==========
+    let particles = [];
+    let canvas, ctx;
+    
     class Particle {
-        constructor(x, y, type, targetX, targetY) {
+        constructor(x, y, type, color, targetX, targetY) {
             this.x = x;
             this.y = y;
-            this.type = type;
+            this.type = type; // 'heart', 'music', 'sparkle', 'firework'
+            this.color = color;
             this.targetX = targetX;
             this.targetY = targetY;
-            this.size = Math.random() * 10 + 5;
+            this.size = Math.random() * 8 + 4;
             this.speed = Math.random() * 3 + 2;
-            this.life = CONFIG.particleLifetime;
-            this.maxLife = CONFIG.particleLifetime;
-            this.color = this.getColor();
+            this.life = 100;
+            this.maxLife = 100;
             this.rotation = Math.random() * Math.PI * 2;
-        }
-        
-        getColor() {
-            switch(this.type) {
-                case 'kiss': return '#ff3366';
-                case 'music': return '#33ccff';
-                case 'heart': return '#ff66cc';
-                case 'star': return '#ffcc00';
-                default: return '#ffffff';
-            }
+            this.rotationSpeed = (Math.random() - 0.5) * 0.1;
         }
         
         update() {
-            // 计算到目标的向量
-            const dx = this.targetX - this.x;
-            const dy = this.targetY - this.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            
-            // 飞向目标
-            if (distance > 10) {
-                this.x += (dx / distance) * this.speed;
-                this.y += (dy / distance) * this.speed;
+            if (this.targetX && this.targetY) {
+                const dx = this.targetX - this.x;
+                const dy = this.targetY - this.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance > 10) {
+                    this.x += (dx / distance) * this.speed;
+                    this.y += (dy / distance) * this.speed;
+                }
+            } else {
+                this.y -= this.speed;
+                this.x += Math.sin(this.life * 0.1) * 2;
             }
             
-            // 生命周期
             this.life--;
-            return this.life > 0 && distance > 5;
+            this.rotation += this.rotationSpeed;
+            
+            return this.life > 0;
         }
         
         draw() {
@@ -605,30 +820,7 @@
             ctx.globalAlpha = this.life / this.maxLife;
             
             switch(this.type) {
-                case 'kiss':
-                    // 嘴唇粒子
-                    ctx.fillStyle = this.color;
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.fill();
-                    // 嘴唇中间
-                    ctx.fillStyle = '#ff6699';
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size * 0.6, 0, Math.PI * 2);
-                    ctx.fill();
-                    break;
-                    
-                case 'music':
-                    // 音符粒子
-                    ctx.fillStyle = this.color;
-                    ctx.font = `${this.size * 2}px Arial`;
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    ctx.fillText('♪', this.x, this.y);
-                    break;
-                    
                 case 'heart':
-                    // 爱心粒子
                     ctx.fillStyle = this.color;
                     ctx.beginPath();
                     for(let i=0; i<Math.PI*2; i+=0.01) {
@@ -639,19 +831,18 @@
                     ctx.fill();
                     break;
                     
-                case 'star':
-                    // 星星粒子
+                case 'music':
+                    ctx.fillStyle = this.color;
+                    ctx.font = `${this.size * 2}px Arial`;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('♪', this.x, this.y);
+                    break;
+                    
+                case 'sparkle':
                     ctx.fillStyle = this.color;
                     ctx.beginPath();
-                    for(let i=0; i<5; i++) {
-                        const angle = (i * Math.PI * 2) / 5;
-                        const spike = this.size;
-                        ctx.lineTo(
-                            this.x + Math.cos(angle) * spike,
-                            this.y + Math.sin(angle) * spike
-                        );
-                    }
-                    ctx.closePath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                     ctx.fill();
                     break;
             }
@@ -660,346 +851,424 @@
         }
     }
     
-    // ========== 角色互动函数 ==========
-    function sendKiss() {
-        // 雷恩向鳌拜发送啵啵
-        createParticles(
-            gameState.lein.position.x,
-            gameState.lein.position.y,
-            'kiss',
-            gameState.aobai.position.x,
-            gameState.aobai.position.y,
-            20
-        );
+    // ========== 游戏功能函数 ==========
+    function showDialogue(character, text, duration = 3000) {
+        const bubble = document.getElementById('dialogueBubble');
+        bubble.innerHTML = `
+            <div class="dialogue-owner">
+                <span style="color: ${character === 'aobai' ? '#ff6b6b' : '#6bb3ff'}">
+                    ${character === 'aobai' ? '🎤 鳌拜' : '🌟 雷恩'}
+                </span>
+            </div>
+            <div class="dialogue-content">${text}</div>
+        `;
         
-        // 更新状态
-        gameState.aobai.energy = Math.min(100, gameState.aobai.energy + 5);
-        gameState.lein.energy = Math.max(0, gameState.lein.energy - 2);
-        interactionCount++;
-        
-        // 显示对话
-        showDialogue('lein', "啵啵~ 给鳌拜姐姐的爱心！💋");
-        
-        // 检查成就
-        checkAchievement('first_kiss', '初吻', '送出第一个啵啵', '💋');
-    }
-    
-    function singSong() {
-        // 鳌拜演唱歌曲
-        createParticles(
-            gameState.aobai.position.x,
-            gameState.aobai.position.y,
-            'music',
-            gameState.lein.position.x,
-            gameState.lein.position.y,
-            30
-        );
-        
-        // 鳌拜跳舞动画
-        animateAobai('sing');
-        
-        // 更新状态
-        gameState.lein.energy = Math.min(100, gameState.lein.energy + 10);
-        gameState.aobai.energy = Math.max(0, gameState.aobai.energy - 5);
-        gameState.aobai.fans++;
-        
-        // 显示对话
-        showDialogue('aobai', "献上一首《啵啵能量》！🎵");
-        
-        // 检查成就
-        if (gameState.aobai.fans >= 10) {
-            checkAchievement('popular', '人气歌手', '粉丝达到10人', '🌟');
-        }
-    }
-    
-    function cheer() {
-        // 雷恩应援打call
-        createParticles(
-            gameState.lein.position.x,
-            gameState.lein.position.y,
-            'star',
-            gameState.aobai.position.x,
-            gameState.aobai.position.y - 100,
-            25
-        );
-        
-        // 雷恩跳跃动画
-        animateLein('cheer');
-        
-        // 更新状态
-        gameState.aobai.energy = Math.min(100, gameState.aobai.energy + 8);
-        gameState.lein.energy = Math.max(0, gameState.lein.energy - 3);
-        
-        // 显示对话
-        showDialogue('lein', "鳌拜姐姐加油！🎉");
-        
-        // 检查成就
-        if (interactionCount >= 20) {
-            checkAchievement('super_fan', '超级粉丝', '互动达到20次', '🎫');
-        }
-    }
-    
-    function duet() {
-        // 合唱互动
-        createParticles(
-            (gameState.aobai.position.x + gameState.lein.position.x) / 2,
-            (gameState.aobai.position.y + gameState.lein.position.y) / 2 - 50,
-            'heart',
-            window.innerWidth / 2,
-            window.innerHeight / 2,
-            40
-        );
-        
-        // 双人动画
-        animateAobai('duet');
-        animateLein('duet');
-        
-        // 更新关系等级
-        gameState.relationshipLevel++;
-        
-        // 更新状态
-        gameState.aobai.energy = Math.min(100, gameState.aobai.energy + 15);
-        gameState.lein.energy = Math.min(100, gameState.lein.energy + 15);
-        
-        // 显示对话
-        showDialogue('aobai', "和雷恩的完美合唱！🎶");
-        setTimeout(() => showDialogue('lein', "最幸福的时刻！😭"), 1500);
-        
-        // 检查成就
-        if (gameState.relationshipLevel >= 5) {
-            checkAchievement('best_duet', '最佳拍档', '关系等级达到5级', '👯');
-        }
-    }
-    
-    // ========== 辅助函数 ==========
-    function createParticles(x, y, type, targetX, targetY, count) {
-        for (let i = 0; i < count; i++) {
-            if (particles.length < CONFIG.maxParticles) {
-                particles.push(new Particle(
-                    x + Math.random() * 40 - 20,
-                    y + Math.random() * 40 - 20,
-                    type,
-                    targetX + Math.random() * 40 - 20,
-                    targetY + Math.random() * 40 - 20
-                ));
-            }
+        // 位置调整
+        if (character === 'aobai') {
+            bubble.style.left = '20px';
+            bubble.style.right = 'auto';
+            bubble.style.bottom = '200px';
+            bubble.style.transform = 'translateY(0)';
+            bubble.style.opacity = '0';
+        } else {
+            bubble.style.left = 'auto';
+            bubble.style.right = '20px';
+            bubble.style.bottom = '200px';
+            bubble.style.transform = 'translateY(0)';
+            bubble.style.opacity = '0';
         }
         
-        // 播放音效提示
-        playSound(type);
-    }
-    
-    function showDialogue(character, text) {
-        const bubble = document.getElementById(`${character}-dialogue`);
-        bubble.textContent = text;
-        bubble.style.opacity = '1';
-        bubble.style.transform = 'translateY(0)';
+        bubble.classList.add('show');
         
         setTimeout(() => {
-            bubble.style.opacity = '0';
-            bubble.style.transform = 'translateY(20px)';
-        }, 2000);
+            bubble.classList.remove('show');
+        }, duration);
     }
     
-    function animateAobai(action) {
-        const aobai = document.getElementById('aobai');
+    function updateMood() {
+        const aobaiMoods = ['😠', '😐', '😊', '😍'];
+        const leinMoods = ['😢', '😐', '😊', '😍'];
         
-        switch(action) {
-            case 'sing':
-                aobai.style.animation = 'bounce 0.5s ease 3';
-                // 生成音符
-                for (let i = 0; i < 5; i++) {
-                    setTimeout(() => {
-                        const note = document.createElement('div');
-                        note.className = 'music-note';
-                        note.textContent = '♪';
-                        note.style.left = `${gameState.aobai.position.x + 50}px`;
-                        note.style.top = `${gameState.aobai.position.y - 50}px`;
-                        note.style.color = '#33ccff';
-                        note.style.animationDelay = `${i * 0.2}s`;
-                        document.body.appendChild(note);
-                        
-                        setTimeout(() => note.remove(), 2000);
-                    }, i * 200);
-                }
-                break;
-                
-            case 'duet':
-                aobai.style.animation = 'shake 0.5s ease 2';
-                break;
-        }
+        const aobaiMood = Math.floor(GAME_STATE.aobai.mood / 25);
+        const leinMood = Math.floor(GAME_STATE.lein.mood / 25);
         
-        setTimeout(() => aobai.style.animation = '', 2000);
-    }
-    
-    function animateLein(action) {
-        const lein = document.getElementById('lein');
+        document.getElementById('aobaiMoodIcon').textContent = aobaiMoods[aobaiMood];
+        document.getElementById('leinMoodIcon').textContent = leinMoods[leinMood];
         
-        switch(action) {
-            case 'cheer':
-                lein.style.animation = 'bounce 0.3s ease 5';
-                break;
-                
-            case 'duet':
-                lein.style.animation = 'pulse 1s ease 2';
-                break;
-        }
+        // 心情文字
+        const moodTexts = {
+            aobai: ['生气中', '心情一般', '心情不错', '超级开心'],
+            lein: ['有点难过', '心情平静', '很开心', '幸福满满']
+        };
         
-        setTimeout(() => lein.style.animation = '', 2000);
-    }
-    
-    function checkAchievement(id, title, desc, icon) {
-        if (!gameState.achievements.has(id)) {
-            gameState.achievements.add(id);
-            
-            const show = document.getElementById('achievementShow');
-            document.getElementById('achievementTitle').textContent = title;
-            document.getElementById('achievementDesc').textContent = desc;
-            document.getElementById('achievementIcon').textContent = icon;
-            
-            show.classList.add('show');
-            
-            setTimeout(() => {
-                show.classList.remove('show');
-            }, 3000);
-        }
-    }
-    
-    function playSound(type) {
-        // 简单的音效提示
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        document.getElementById('aobaiMoodText').textContent = moodTexts.aobai[aobaiMood];
+        document.getElementById('leinMoodText').textContent = moodTexts.lein[leinMood];
         
-        try {
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            
-            switch(type) {
-                case 'kiss':
-                    oscillator.frequency.value = 800;
-                    oscillator.type = 'sine';
-                    break;
-                case 'music':
-                    oscillator.frequency.value = 523.25; // C5
-                    oscillator.type = 'sine';
-                    break;
-                case 'heart':
-                    oscillator.frequency.value = 659.25; // E5
-                    oscillator.type = 'sine';
-                    break;
-                case 'star':
-                    oscillator.frequency.value = 783.99; // G5
-                    oscillator.type = 'sine';
-                    break;
-            }
-            
-            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-            
-            oscillator.start();
-            oscillator.stop(audioContext.currentTime + 0.3);
-        } catch (e) {
-            // 音频上下文可能被浏览器阻止，静默失败
-        }
-    }
-    
-    function updateUI() {
-        document.getElementById('aobai-energy').textContent = Math.round(gameState.aobai.energy);
-        document.getElementById('aobai-fans').textContent = gameState.aobai.fans;
-        document.getElementById('lein-energy').textContent = Math.round(gameState.lein.energy);
-        document.getElementById('lein-tickets').textContent = gameState.lein.tickets === Infinity ? '∞' : gameState.lein.tickets;
-        
-        // 更新聚光灯
-        document.getElementById('spotlight-aobai').style.left = `${gameState.aobai.position.x - 100}px`;
-        document.getElementById('spotlight-lein').style.left = `${gameState.lein.position.x - 100}px`;
-        
-        // 更新卡片边框光效
+        // 更新卡片颜色
         const aobaiCard = document.getElementById('aobai-card');
         const leinCard = document.getElementById('lein-card');
         
-        aobaiCard.style.boxShadow = `0 0 20px ${gameState.aobai.energy > 50 ? '#ff3366' : '#ff6699'}`;
-        leinCard.style.boxShadow = `0 0 20px ${gameState.lein.energy > 50 ? '#33ccff' : '#99ccff'}`;
+        const aobaiOpacity = 0.3 + (GAME_STATE.aobai.mood / 100) * 0.4;
+        const leinOpacity = 0.3 + (GAME_STATE.lein.mood / 100) * 0.4;
         
-        // 更新角色位置动画
-        document.getElementById('aobai').style.left = `${gameState.aobai.position.x - 60}px`;
-        document.getElementById('lein').style.left = `${gameState.lein.position.x - 60}px`;
+        aobaiCard.style.borderColor = `rgba(255, 107, 107, ${aobaiOpacity})`;
+        leinCard.style.borderColor = `rgba(107, 179, 255, ${leinOpacity})`;
+    }
+    
+    function createParticleEffect(type, count, sourceX, sourceY, targetX, targetY) {
+        const colors = {
+            heart: ['#ff6b6b', '#ff8e53', '#ffd166'],
+            music: ['#6bb3ff', '#53c5ff', '#4ecdc4'],
+            sparkle: ['#ffffff', '#ffd166', '#a663cc']
+        };
+        
+        for (let i = 0; i < count; i++) {
+            const color = colors[type][Math.floor(Math.random() * colors[type].length)];
+            particles.push(new Particle(
+                sourceX + Math.random() * 40 - 20,
+                sourceY + Math.random() * 40 - 20,
+                type,
+                color,
+                targetX + Math.random() * 60 - 30,
+                targetY + Math.random() * 60 - 30
+            ));
+        }
+    }
+    
+    function singRandomSong() {
+        const availableSongs = REAL_SONGS.filter(song => 
+            song.unlockDay <= GAME_STATE.dayCount
+        );
+        
+        if (availableSongs.length === 0) return;
+        
+        const song = availableSongs[Math.floor(Math.random() * availableSongs.length)];
+        GAME_STATE.currentSong = song;
+        
+        // 更新UI
+        document.getElementById('currentSongTitle').textContent = `正在演唱：《${song.title}》`;
+        
+        const moodMap = {
+            melancholy: '😢 深情演唱',
+            rainy: '☔️ 雨夜情歌',
+            sweet: '💕 甜蜜时刻',
+            romantic: '✨ 浪漫氛围',
+            deep: '💖 走心演绎',
+            gentle: '🌸 温柔如水',
+            cozy: '🏡 温馨治愈',
+            passionate: '🔥 热情奔放',
+            healing: '🌱 治愈时刻',
+            brave: '🦸 勇敢告白'
+        };
+        
+        document.getElementById('currentSongMood').textContent = 
+            `${moodMap[song.mood] || '🎵 用心演唱'} | ${song.artist}`;
+        
+        // 添加心情影响
+        let moodChange = 0;
+        let intimacyChange = 0;
+        
+        switch(song.mood) {
+            case 'sweet':
+            case 'romantic':
+                moodChange = 10;
+                intimacyChange = 5;
+                if (song.special === 'promise' || song.special === 'fireworks') {
+                    showSpecialMoment(song.special);
+                }
+                break;
+            case 'melancholy':
+            case 'rainy':
+                moodChange = -5;
+                intimacyChange = 3;
+                if (song.special === 'firstMeeting' || song.special === 'rainyNight') {
+                    showSpecialMoment(song.special);
+                }
+                break;
+            default:
+                moodChange = 5;
+                intimacyChange = 2;
+        }
+        
+        GAME_STATE.aobai.mood = Math.max(0, Math.min(100, GAME_STATE.aobai.mood + moodChange));
+        GAME_STATE.relationship.intimacy = Math.min(100, GAME_STATE.relationship.intimacy + intimacyChange);
+        
+        // 生成音乐粒子
+        createParticleEffect('music', 20, 
+            window.innerWidth / 2, 100,
+            window.innerWidth / 2, window.innerHeight / 2
+        );
+        
+        // 随机对话
+        const dialogues = GAME_STATE.aobai.mood > 60 ? 
+            DIALOGUES.aobai.happy : DIALOGUES.aobai.touched;
+        const randomDialogue = dialogues[Math.floor(Math.random() * dialogues.length)];
+        
+        setTimeout(() => {
+            showDialogue('aobai', randomDialogue);
+        }, 1000);
+        
+        updateMood();
+        
+        return song;
+    }
+    
+    function showSpecialMoment(type) {
+        const moment = SPECIAL_MOMENTS.find(m => 
+            (type === 'firstMeeting' && m.id === 1) ||
+            (type === 'rainyNight' && m.id === 4) ||
+            (type === 'fireworks' && m.id === 2) ||
+            (type === 'promise' && m.id === 3)
+        );
+        
+        if (!moment || GAME_STATE.specialMoments.includes(moment.id)) return;
+        
+        GAME_STATE.specialMoments.push(moment.id);
+        
+        const momentElement = document.getElementById('specialMoment');
+        document.getElementById('momentIcon').textContent = moment.icon;
+        document.getElementById('momentTitle').textContent = moment.title;
+        document.getElementById('momentDesc').textContent = moment.description;
+        
+        momentElement.classList.add('show');
+        
+        // 烟花效果
+        if (type === 'fireworks') {
+            createFireworks();
+        }
+        
+        setTimeout(() => {
+            momentElement.classList.remove('show');
+        }, 4000);
+    }
+    
+    function createFireworks() {
+        const container = document.getElementById('fireworksContainer');
+        
+        for (let i = 0; i < 5; i++) {
+            setTimeout(() => {
+                const firework = document.createElement('div');
+                firework.style.cssText = `
+                    position: absolute;
+                    width: 4px;
+                    height: 4px;
+                    background: ${['#ff6b6b', '#ffd166', '#6bb3ff', '#a663cc'][i % 4]};
+                    border-radius: 50%;
+                    left: ${20 + i * 20}%;
+                    top: 80%;
+                    animation: floatUp 2s ease-out forwards;
+                    box-shadow: 0 0 10px currentColor;
+                `;
+                container.appendChild(firework);
+                
+                // 爆炸效果
+                setTimeout(() => {
+                    for (let j = 0; j < 30; j++) {
+                        const spark = document.createElement('div');
+                        const angle = (j / 30) * Math.PI * 2;
+                        const distance = 50 + Math.random() * 50;
+                        spark.style.cssText = `
+                            position: absolute;
+                            width: 3px;
+                            height: 3px;
+                            background: inherit;
+                            border-radius: 50%;
+                            left: ${20 + i * 20}%;
+                            top: 30%;
+                            animation: sparkle 1.5s ease-out forwards;
+                            transform-origin: center;
+                        `;
+                        spark.style.setProperty('--angle', angle);
+                        spark.style.setProperty('--distance', distance);
+                        container.appendChild(spark);
+                        
+                        setTimeout(() => spark.remove(), 1500);
+                    }
+                    
+                    setTimeout(() => firework.remove(), 2000);
+                }, 1000);
+            }, i * 300);
+        }
+    }
+    
+    // ========== 互动函数 ==========
+    function sendGift() {
+        // 雷恩送礼
+        const gifts = [
+            { name: "虚拟玫瑰", value: 5, emoji: "🌹" },
+            { name: "星星项链", value: 10, emoji: "⭐" },
+            { name: "定制麦克风", value: 20, emoji: "🎤" },
+            { name: "星空投影灯", value: 15, emoji: "🌌" }
+        ];
+        
+        const gift = gifts[Math.floor(Math.random() * gifts.length)];
+        
+        // 生成爱心粒子
+        createParticleEffect('heart', 15,
+            window.innerWidth * 0.8, window.innerHeight * 0.7,
+            window.innerWidth * 0.2, window.innerHeight * 0.7
+        );
+        
+        // 更新状态
+        GAME_STATE.aobai.mood += gift.value;
+        GAME_STATE.lein.affection += 3;
+        GAME_STATE.relationship.intimacy += 2;
+        
+        // 对话反应
+        if (GAME_STATE.aobai.affection < 50) {
+            showDialogue('aobai', 
+                `谢谢雷恩的${gift.emoji}${gift.name}...但是太破费了`, 
+                3000
+            );
+            GAME_STATE.aobai.affection += 2;
+        } else {
+            showDialogue('aobai', 
+                `又收到${gift.emoji}${gift.name}了！雷恩你真是的～`, 
+                3000
+            );
+            GAME_STATE.aobai.mood += 5;
+        }
+        
+        showDialogue('lein', 
+            `希望鳌拜喜欢这个${gift.emoji}${gift.name}！`, 
+            2000
+        );
+        
+        updateMood();
+    }
+    
+    function requestSong() {
+        // 雷恩点歌
+        const availableSongs = REAL_SONGS.filter(song => 
+            song.unlockDay <= GAME_STATE.dayCount
+        );
+        
+        if (availableSongs.length === 0) return;
+        
+        const song = availableSongs[Math.floor(Math.random() * availableSongs.length)];
+        
+        // 特殊歌曲处理
+        if (song.special === 'confession' && GAME_STATE.lein.secretFeelings < 70) {
+            showDialogue('lein', "那首歌...还不到时候点", 2000);
+            return;
+        }
+        
+        showDialogue('lein', 
+            `我想听《${song.title}》！这是我最喜欢的歌之一～`, 
+            3000
+        );
+        
+        setTimeout(() => {
+            if (GAME_STATE.aobai.mood > 60) {
+                showDialogue('aobai', 
+                    `好呀，为你唱这首《${song.title}》`, 
+                    3000
+                );
+                setTimeout(() => singRandomSong(), 1000);
+            } else {
+                showDialogue('aobai', 
+                    `今天有点累呢...下次再唱《${song.title}》给你听`, 
+                    3000
+                );
+            }
+        }, 1500);
+    }
+    
+    function tellJoke() {
+        // 雷恩讲笑话逗鳌拜开心
+        const joke = JOKES[Math.floor(Math.random() * JOKES.length)];
+        
+        showDialogue('lein', joke, 4000);
+        
+        // 生成开心粒子
+        createParticleEffect('sparkle', 10,
+            window.innerWidth * 0.8, window.innerHeight * 0.7,
+            window.innerWidth * 0.2, window.innerHeight * 0.7
+        );
+        
+        setTimeout(() => {
+            // 鳌拜反应
+            const reactions = [
+                { mood: 10, text: "噗...雷恩你这个笑话好冷啊！但还是谢谢你想逗我开心～", affection: 3 },
+                { mood: 5, text: "哈哈哈～雷恩你总是这么有趣", affection: 2 },
+                { mood: -5, text: "现在没心情开玩笑啦...", affection: 0 }
+            ];
+            
+            const reaction = GAME_STATE.aobai.mood > 50 ? 
+                reactions[Math.floor(Math.random() * 2)] : reactions[2];
+            
+            GAME_STATE.aobai.mood += reaction.mood;
+            GAME_STATE.aobai.affection += reaction.affection;
+            
+            showDialogue('aobai', reaction.text, 3000);
+            updateMood();
+        }, 2500);
+    }
+    
+    function confess() {
+        // 雷恩说悄悄话
+        if (GAME_STATE.lein.secretFeelings < 30) {
+            showDialogue('lein', "我...没什么啦！", 2000);
+            return;
+        }
+        
+        const confessions = [
+            "鳌拜...其实我...（啊我在说什么）",
+            "有时候我在想，如果...不，没什么！",
+            "你唱歌的时候，是我最开心的时候",
+            "能不能...永远做你的头号粉丝？"
+        ];
+        
+        const confession = confessions[Math.floor(Math.random() * confessions.length)];
+        
+        showDialogue('lein', confession, 3000);
+        
+        // 生成紧张粒子
+        createParticleEffect('sparkle', 8,
+            window.innerWidth * 0.8, window.innerHeight * 0.7,
+            window.innerWidth * 0.2, window.innerHeight * 0.7
+        );
+        
+        setTimeout(() => {
+            // 鳌拜反应
+            if (GAME_STATE.aobai.affection < 40) {
+                showDialogue('aobai', 
+                    "雷恩你今天怎么怪怪的？我们是好朋友呀～", 
+                    3000
+                );
+                GAME_STATE.aobai.mood -= 5;
+                GAME_STATE.aobai.affection += 1;
+            } else {
+                showDialogue('aobai', 
+                    "雷恩...你对我真的很特别。谢谢你一直陪着我", 
+                    4000
+                );
+                GAME_STATE.aobai.mood += 5;
+                GAME_STATE.aobai.affection += 3;
+                GAME_STATE.relationship.intimacy += 5;
+            }
+            
+            GAME_STATE.lein.secretFeelings += 5;
+            updateMood();
+        }, 2000);
     }
     
     // ========== 动画循环 ==========
     function animate() {
         // 清空画布
-        ctx.fillStyle = 'rgba(26, 11, 46, 0.1)';
+        ctx.fillStyle = 'rgba(26, 26, 46, 0.1)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
-        // 绘制连接线
-        drawConnectionLine();
         
         // 更新并绘制粒子
         particles = particles.filter(p => p.update());
         particles.forEach(p => p.draw());
         
-        // 绘制角色
-        drawCharacters();
-        
-        // 更新UI
-        updateUI();
-        
         requestAnimationFrame(animate);
-    }
-    
-    function drawConnectionLine() {
-        const dx = gameState.lein.position.x - gameState.aobai.position.x;
-        const dy = gameState.lein.position.y - gameState.aobai.position.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        
-        // 绘制能量连接线
-        if (distance < 500) {
-            ctx.save();
-            const gradient = ctx.createLinearGradient(
-                gameState.aobai.position.x, gameState.aobai.position.y,
-                gameState.lein.position.x, gameState.lein.position.y
-            );
-            gradient.addColorStop(0, '#ff3366');
-            gradient.addColorStop(1, '#33ccff');
-            
-            ctx.strokeStyle = gradient;
-            ctx.lineWidth = 3;
-            ctx.setLineDash([10, 5]);
-            ctx.globalAlpha = 0.5;
-            
-            ctx.beginPath();
-            ctx.moveTo(gameState.aobai.position.x, gameState.aobai.position.y);
-            ctx.lineTo(gameState.lein.position.x, gameState.lein.position.y);
-            ctx.stroke();
-            
-            ctx.restore();
-            
-            // 在连线上绘制流动光点
-            const progress = (Date.now() * 0.001) % 1;
-            const pointX = gameState.aobai.position.x + dx * progress;
-            const pointY = gameState.aobai.position.y + dy * progress;
-            
-            ctx.save();
-            ctx.fillStyle = '#ffffff';
-            ctx.shadowColor = '#ffffff';
-            ctx.shadowBlur = 15;
-            ctx.beginPath();
-            ctx.arc(pointX, pointY, 5, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.restore();
-        }
-    }
-    
-    function drawCharacters() {
-        // 这里可以添加更复杂的角色绘制
-        // 目前使用CSS绘制的角色，这里保持空白或添加额外效果
     }
     
     // ========== 初始化 ==========
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('🎤 鳌拜演唱会剧场启动中...');
+        console.log('🎵 夏夜烟火音乐情缘启动中...');
         
         // 初始化Canvas
         canvas = document.getElementById('canvas');
@@ -1008,86 +1277,44 @@
         canvas.height = window.innerHeight;
         
         // 绑定按钮事件
-        document.getElementById('send-kiss-btn').addEventListener('click', sendKiss);
-        document.getElementById('sing-song-btn').addEventListener('click', singSong);
-        document.getElementById('cheer-btn').addEventListener('click', cheer);
-        document.getElementById('duet-btn').addEventListener('click', duet);
+        document.getElementById('sendGiftBtn').addEventListener('click', sendGift);
+        document.getElementById('requestSongBtn').addEventListener('click', requestSong);
+        document.getElementById('tellJokeBtn').addEventListener('click', tellJoke);
+        document.getElementById('confessBtn').addEventListener('click', confess);
         
         // 触摸事件
         canvas.addEventListener('touchstart', (e) => {
             e.preventDefault();
             const touch = e.touches[0];
             
-            // 判断点击靠近哪个角色
-            const clickX = touch.clientX;
-            const clickY = touch.clientY;
-            
-            const distToAobai = Math.sqrt(
-                Math.pow(clickX - gameState.aobai.position.x, 2) +
-                Math.pow(clickY - gameState.aobai.position.y, 2)
-            );
-            
-            const distToLein = Math.sqrt(
-                Math.pow(clickX - gameState.lein.position.x, 2) +
-                Math.pow(clickY - gameState.lein.position.y, 2)
-            );
-            
-            if (distToAobai < 100) {
-                sendKiss();
-            } else if (distToLein < 100) {
-                cheer();
-            } else {
-                // 在中间点击创建随机粒子
-                createParticles(
-                    clickX, clickY, 
-                    ['kiss', 'music', 'heart', 'star'][Math.floor(Math.random() * 4)],
-                    window.innerWidth / 2, window.innerHeight / 2,
-                    10
-                );
-            }
+            // 随机互动
+            const interactions = [sendGift, requestSong, tellJoke];
+            const randomInteraction = interactions[Math.floor(Math.random() * interactions.length)];
+            randomInteraction();
         });
         
         canvas.addEventListener('touchmove', (e) => {
             e.preventDefault();
             for (let touch of e.touches) {
-                createParticles(
+                createParticleEffect('sparkle', 1, 
                     touch.clientX, touch.clientY,
-                    'star',
-                    gameState.aobai.position.x, gameState.aobai.position.y,
-                    3
+                    null, null
                 );
             }
         });
         
         // 鼠标事件
         canvas.addEventListener('mousedown', (e) => {
-            const clickX = e.clientX;
-            const clickY = e.clientY;
-            
-            const distToAobai = Math.sqrt(
-                Math.pow(clickX - gameState.aobai.position.x, 2) +
-                Math.pow(clickY - gameState.aobai.position.y, 2)
-            );
-            
-            const distToLein = Math.sqrt(
-                Math.pow(clickX - gameState.lein.position.x, 2) +
-                Math.pow(clickY - gameState.lein.position.y, 2)
-            );
-            
-            if (distToAobai < 100) {
-                singSong();
-            } else if (distToLein < 100) {
-                duet();
+            if (e.button === 0) { // 左键
+                singRandomSong();
             }
         });
         
         canvas.addEventListener('mousemove', (e) => {
             if (e.buttons === 1) { // 左键拖动
-                createParticles(
+                createParticleEffect('sparkle', 1, 
                     e.clientX, e.clientY,
-                    'music',
-                    gameState.lein.position.x, gameState.lein.position.y,
-                    2
+                    null, null
                 );
             }
         });
@@ -1096,58 +1323,75 @@
         window.addEventListener('resize', () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            
-            // 更新角色位置
-            gameState.aobai.position = { 
-                x: window.innerWidth * 0.2, 
-                y: window.innerHeight * 0.7 
-            };
-            gameState.lein.position = { 
-                x: window.innerWidth * 0.8, 
-                y: window.innerHeight * 0.7 
-            };
         });
         
-        // 开场动画
+        // 添加CSS动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes micPulse {
+                0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.4); }
+                50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255, 107, 107, 0); }
+            }
+            
+            @keyframes floatUp {
+                0% { transform: translateY(0) scale(0); opacity: 0; }
+                50% { opacity: 1; transform: translateY(-100px) scale(1); }
+                100% { transform: translateY(-200px) scale(0); opacity: 0; }
+            }
+            
+            @keyframes sparkle {
+                0% { 
+                    transform: translate(0, 0) scale(1);
+                    opacity: 1;
+                }
+                100% { 
+                    transform: translate(
+                        calc(cos(var(--angle)) * var(--distance)),
+                        calc(sin(var(--angle)) * var(--distance))
+                    ) scale(0);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // 开场
         setTimeout(() => {
-            showDialogue('aobai', "欢迎来到我的演唱会！🎤");
+            showDialogue('aobai', "欢迎大家来到我的语音厅～今天也是努力唱歌的一天！", 3000);
             setTimeout(() => {
-                showDialogue('lein', "鳌拜姐姐我来啦！😍");
-                createParticles(
-                    gameState.lein.position.x, gameState.lein.position.y,
-                    'heart',
-                    gameState.aobai.position.x, gameState.aobai.position.y,
-                    30
-                );
-            }, 1000);
+                showDialogue('lein', "鳌拜我来啦！今天也为你打call！", 2000);
+                
+                // 随机播放一首歌
+                setTimeout(() => {
+                    const initialSong = REAL_SONGS[Math.floor(Math.random() * 2)];
+                    document.getElementById('currentSongTitle').textContent = 
+                        `正在演唱：《${initialSong.title}》`;
+                    document.getElementById('currentSongMood').textContent = 
+                        `🎵 初遇回忆 | ${initialSong.artist}`;
+                }, 1000);
+            }, 1500);
         }, 500);
         
         // 启动动画循环
         animate();
         
-        console.log('✅ 演唱会剧场启动完成！');
+        // 随机自动互动
+        setInterval(() => {
+            if (Math.random() > 0.7) {
+                const autoActions = [singRandomSong, sendGift, tellJoke];
+                autoActions[Math.floor(Math.random() * autoActions.length)]();
+            }
+            
+            // 每天递增
+            if (Math.random() > 0.95) {
+                GAME_STATE.dayCount++;
+                document.getElementById('audienceCount').textContent = 
+                    Math.floor(1 + GAME_STATE.dayCount * 0.5);
+            }
+        }, 10000);
+        
+        console.log('✅ 音乐情缘启动完成！');
     });
-    
-    // 添加CSS动画
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.1); opacity: 1; }
-        }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-    `;
-    document.head.appendChild(style);
     </script>
 </body>
 </html>
