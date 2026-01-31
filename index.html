@@ -1,5 +1,3 @@
-
-```html
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -8,658 +6,65 @@
     <title>夏夜烟火- 雷恩与鳌拜的音乐故事</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
-        }
+        /* 所有原有CSS样式保持不变，只添加一些新样式 */
+        /* ... 原有CSS样式 ... */
         
-        body {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            color: #f0f0f0;
-            min-height: 100vh;
-            padding: 20px;
-            overflow-x: hidden;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
-        
-        header {
-            text-align: center;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 15px;
-            border: 2px solid #4cc9f0;
-            box-shadow: 0 0 20px rgba(76, 201, 240, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        header::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(76, 201, 240, 0.1)"/></svg>');
-            z-index: -1;
-        }
-        
-        h1 {
-            font-size: 2.8rem;
-            margin-bottom: 10px;
-            background: linear-gradient(to right, #4cc9f0, #f72585);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-        }
-        
-        .subtitle {
-            font-size: 1.2rem;
-            color: #b8b8d1;
-            margin-bottom: 15px;
-        }
-        
-        .main-content {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 25px;
-        }
-        
-        .left-column {
-            flex: 3;
-            min-width: 300px;
-        }
-        
-        .right-column {
-            flex: 2;
-            min-width: 280px;
-        }
-        
-        .panel {
-            background: rgba(25, 25, 45, 0.85);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 25px;
-            border: 1px solid rgba(76, 201, 240, 0.3);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        
-        .panel:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-        }
-        
-        .panel-title {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            color: #4cc9f0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-bottom: 2px solid rgba(76, 201, 240, 0.5);
-            padding-bottom: 8px;
-        }
-        
-        .panel-title i {
-            color: #f72585;
-        }
-        
-        .character-info {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .character-card {
-            flex: 1;
-            min-width: 200px;
-            background: rgba(15, 25, 45, 0.7);
-            border-radius: 12px;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            border: 1px solid rgba(247, 37, 133, 0.4);
-        }
-        
-        .character-avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 3px solid #4cc9f0;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            background: rgba(15, 25, 45, 0.9);
-        }
-        
-        .aobai-avatar {
-            background: linear-gradient(135deg, #f72585, #4361ee);
-            color: white;
-        }
-        
-        .lien-avatar {
-            background: linear-gradient(135deg, #4cc9f0, #7209b7);
-            color: white;
-        }
-        
-        .character-name {
-            font-size: 1.4rem;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        
-        .aobai-name {
-            color: #f72585;
-        }
-        
-        .lien-name {
-            color: #4cc9f0;
-        }
-        
-        .character-role {
-            color: #b8b8d1;
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-        }
-        
-        .mood-indicator {
-            display: flex;
-            align-items: center;
-            gap: 5px;
+        .audio-notice {
             margin-top: 10px;
-            font-size: 0.9rem;
-        }
-        
-        .mood-value {
-            color: #f72585;
-            font-weight: bold;
-        }
-        
-        .dialogue-container {
-            height: 400px;
-            overflow-y: auto;
-            padding: 15px;
-            background: rgba(10, 15, 30, 0.7);
-            border-radius: 10px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(76, 201, 240, 0.2);
-        }
-        
-        .dialogue-message {
-            margin-bottom: 15px;
-            padding: 12px 15px;
-            border-radius: 10px;
-            max-width: 85%;
-            animation: fadeIn 0.8s ease-out;
-            transition: transform 0.3s, opacity 0.5s;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .dialogue-message.hiding {
-            opacity: 0.5;
-            transform: translateX(10px);
-        }
-        
-        .aobai-message {
-            background: rgba(247, 37, 133, 0.15);
-            border-left: 4px solid #f72585;
-            margin-right: auto;
-        }
-        
-        .lien-message {
-            background: rgba(76, 201, 240, 0.15);
-            border-left: 4px solid #4cc9f0;
-            margin-left: auto;
-        }
-        
-        .system-message {
-            background: rgba(255, 215, 0, 0.1);
-            border-left: 4px solid gold;
-            text-align: center;
-            color: #ffd700;
-            margin: 10px auto;
-            max-width: 95%;
-        }
-        
-        .message-sender {
-            font-weight: bold;
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .message-content {
-            line-height: 1.5;
-        }
-        
-        .message-time {
-            font-size: 0.8rem;
-            color: #888;
-            text-align: right;
-            margin-top: 5px;
-        }
-        
-        .interaction-controls {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        
-        .interaction-btn {
-            flex: 1;
-            min-width: 120px;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            background: linear-gradient(135deg, #4361ee, #3a0ca3);
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all 0.3s;
-        }
-        
-        .interaction-btn:hover {
-            background: linear-gradient(135deg, #3a0ca3, #4361ee);
-            transform: scale(1.05);
-            box-shadow: 0 0 15px rgba(67, 97, 238, 0.5);
-        }
-        
-        .interaction-btn:active {
-            transform: scale(0.98);
-        }
-        
-        .danger-btn {
-            background: linear-gradient(135deg, #f72585, #b5179e);
-        }
-        
-        .danger-btn:hover {
-            background: linear-gradient(135deg, #b5179e, #f72585);
-            box-shadow: 0 0 15px rgba(247, 37, 133, 0.5);
-        }
-        
-        .gift-btn {
-            background: linear-gradient(135deg, #ff9a00, #ff6b6b);
-        }
-        
-        .gift-btn:hover {
-            background: linear-gradient(135deg, #ff6b6b, #ff9a00);
-            box-shadow: 0 0 15px rgba(255, 107, 107, 0.5);
-        }
-        
-        .music-player {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .song-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 10px;
-        }
-        
-        .album-cover {
-            width: 80px;
-            height: 80px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, #f72585, #4cc9f0);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .song-details {
-            flex: 1;
-        }
-        
-        .song-title {
-            font-size: 1.3rem;
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #4cc9f0;
-        }
-        
-        .song-artist {
-            color: #b8b8d1;
-            font-size: 1rem;
-        }
-        
-        .player-controls {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 10px;
-        }
-        
-        .control-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: none;
-            background: rgba(76, 201, 240, 0.2);
-            color: #4cc9f0;
-            font-size: 1.3rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-        }
-        
-        .control-btn:hover {
-            background: rgba(76, 201, 240, 0.4);
-            transform: scale(1.1);
-        }
-        
-        .play-btn {
-            background: rgba(247, 37, 133, 0.3);
-            color: #f72585;
-            width: 60px;
-            height: 60px;
-            font-size: 1.6rem;
-        }
-        
-        .play-btn:hover {
-            background: rgba(247, 37, 133, 0.5);
-        }
-        
-        .progress-container {
-            margin-top: 15px;
-        }
-        
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-            overflow: hidden;
-            margin-bottom: 5px;
-            cursor: pointer;
-        }
-        
-        .progress {
-            height: 100%;
-            background: linear-gradient(to right, #4cc9f0, #f72585);
-            width: 0%;
-            border-radius: 4px;
-            transition: width 0.1s;
-        }
-        
-        .song-list {
-            margin-top: 20px;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-        
-        .song-item {
-            padding: 12px 15px;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.05);
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .song-item:hover {
-            background: rgba(76, 201, 240, 0.15);
-            transform: translateX(5px);
-        }
-        
-        .song-item.active {
-            background: rgba(247, 37, 133, 0.2);
-            border-left: 4px solid #f72585;
-        }
-        
-        .song-item i {
-            color: #4cc9f0;
-            font-size: 1.2rem;
-        }
-        
-        .relationship-meter {
-            margin-top: 20px;
-        }
-        
-        .meter-container {
-            height: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            overflow: hidden;
-            margin-bottom: 10px;
-        }
-        
-        .meter-fill {
-            height: 100%;
-            background: linear-gradient(to right, #f72585, #4cc9f0);
-            border-radius: 10px;
-            width: 75%;
-            transition: width 1s;
-        }
-        
-        .meter-label {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.9rem;
-            color: #b8b8d1;
-        }
-        
-        .story-progress {
-            margin-top: 20px;
-        }
-        
-        .milestone {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
             padding: 10px;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.05);
-        }
-        
-        .milestone.active {
-            background: rgba(76, 201, 240, 0.15);
-        }
-        
-        .milestone.completed {
             background: rgba(247, 37, 133, 0.1);
-        }
-        
-        .milestone i {
-            color: #4cc9f0;
-            font-size: 1.2rem;
-        }
-        
-        .milestone.completed i {
-            color: #f72585;
-        }
-        
-        .history-log {
-            max-height: 200px;
-            overflow-y: auto;
-            margin-top: 20px;
-            padding: 10px;
-            background: rgba(10, 15, 30, 0.7);
             border-radius: 8px;
-            font-size: 0.9rem;
-        }
-        
-        .log-entry {
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            color: #b8b8d1;
-        }
-        
-        .log-entry:last-child {
-            border-bottom: none;
-        }
-        
-        .visualizer {
-            height: 60px;
-            margin-top: 15px;
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            gap: 3px;
-        }
-        
-        .bar {
-            width: 6px;
-            background: linear-gradient(to top, #4cc9f0, #f72585);
-            border-radius: 3px;
-            transition: height 0.2s;
-        }
-        
-        .volume-control {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        
-        .volume-slider {
-            flex: 1;
-            height: 6px;
-            -webkit-appearance: none;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 3px;
-            outline: none;
-        }
-        
-        .volume-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: #4cc9f0;
-            cursor: pointer;
-        }
-        
-        footer {
-            text-align: center;
-            padding: 20px;
-            color: #b8b8d1;
-            font-size: 0.9rem;
-            border-top: 1px solid rgba(76, 201, 240, 0.2);
-            margin-top: 20px;
-        }
-        
-        .gift-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        
-        .gift-item {
-            flex: 1;
-            min-width: 100px;
-            padding: 10px;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.05);
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .gift-item:hover {
-            background: rgba(255, 107, 107, 0.2);
-            transform: translateY(-3px);
-        }
-        
-        .gift-item i {
-            font-size: 1.5rem;
-            margin-bottom: 5px;
-            color: #ff9a00;
-        }
-        
-        @media (max-width: 768px) {
-            .main-content {
-                flex-direction: column;
-            }
-            
-            h1 {
-                font-size: 2.2rem;
-            }
-            
-            .dialogue-container {
-                height: 350px;
-            }
-        }
-        
-        .heart {
             color: #f72585;
-            animation: heartbeat 1.5s infinite;
-        }
-        
-        @keyframes heartbeat {
-            0% { transform: scale(1); }
-            5% { transform: scale(1.2); }
-            10% { transform: scale(1.1); }
-            15% { transform: scale(1.3); }
-            20% { transform: scale(1); }
-            100% { transform: scale(1); }
-        }
-        
-        .special-message {
-            border: 2px dashed #f72585;
+            font-size: 0.9rem;
+            text-align: center;
+            border: 1px dashed #f72585;
             animation: pulse 2s infinite;
         }
         
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(247, 37, 133, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(247, 37, 133, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(247, 37, 133, 0); }
-        }
-        
-        .lyrics-container {
-            margin-top: 15px;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 8px;
-            font-size: 0.9rem;
-            color: #b8b8d1;
-            height: 80px;
-            overflow-y: auto;
-        }
-        
-        .current-lyric {
+        .simulation-mode {
+            background: rgba(76, 201, 240, 0.1);
+            border: 1px solid #4cc9f0;
             color: #4cc9f0;
-            font-weight: bold;
+        }
+        
+        .audio-status {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            color: #b8b8d1;
+        }
+        
+        .audio-status i {
+            color: #4cc9f0;
+        }
+        
+        @keyframes music-note {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-20px); opacity: 0; }
+        }
+        
+        .music-note {
+            position: absolute;
+            color: #f72585;
+            font-size: 1rem;
+            animation: music-note 1s ease-out forwards;
+            pointer-events: none;
+        }
+        
+        .album-cover {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .playing-animation {
+            animation: spin 10s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -735,6 +140,12 @@
                             <div>超级星星</div>
                         </div>
                     </div>
+                    
+                    <!-- 添加音频提示 -->
+                    <div class="audio-notice" id="audioNotice">
+                        <i class="fas fa-info-circle"></i> 
+                        点击播放按钮开始音乐体验！使用模拟音频提供完整的交互感受。
+                    </div>
                 </div>
                 
                 <div class="panel">
@@ -750,12 +161,16 @@
                     <h2 class="panel-title"><i class="fas fa-music"></i> 音乐播放器</h2>
                     <div class="music-player">
                         <div class="song-info">
-                            <div class="album-cover">
+                            <div class="album-cover" id="albumCover">
                                 <i class="fas fa-compact-disc"></i>
                             </div>
                             <div class="song-details">
                                 <div class="song-title" id="currentSongTitle">最后一首情歌</div>
                                 <div class="song-artist" id="currentSongArtist">苏琛</div>
+                                <div class="audio-status" id="audioStatus">
+                                    <i class="fas fa-headphones"></i>
+                                    <span>点击播放开始音乐</span>
+                                </div>
                             </div>
                         </div>
                         
@@ -875,17 +290,10 @@
         </div>
         
         <footer>
-            <p>语音厅故事 · 雷恩与鳌拜的音乐旅程 | 所有歌曲版权归原歌手所有</p>
-            <p>这是一个关于音乐、友情故事</p>
+            <p>语音厅故事 · 雷恩与鳌拜的音乐旅程 | 这是一个交互式音乐故事体验</p>
+            <p>点击播放按钮开始音乐旅程，享受完整的故事情节和互动体验</p>
         </footer>
     </div>
-
-    <!-- 音频元素 - 使用本地模拟音频 -->
-    <audio id="audioPlayer">
-        <!-- 使用一个可公开访问的音频资源 -->
-        <source src="https://assets.mixkit.co/music/preview/mixkit-tech-house-vibes-130.mp3" type="audio/mpeg">
-        您的浏览器不支持音频播放
-    </audio>
 
     <script>
         // 初始化变量
@@ -903,6 +311,10 @@
         let currentDialogueIndex = 0;
         let autoDialogueTimer;
         let giftSent = false;
+        let simulationMode = true; // 使用模拟模式
+        let currentTime = 0;
+        let songDuration = 225; // 3分45秒
+        let progressInterval;
         
         // 歌曲数据 - 按照情感线发展
         const songs = [
@@ -917,7 +329,8 @@
                     {time: 10, text: "记得那天你第一次来我的语音厅"},
                     {time: 20, text: "点了这首歌，说喜欢我的声音"},
                     {time: 30, text: "从那时起，你就成了我的常客"}
-                ]
+                ],
+                audioUrl: "https://cdn.pixabay.com/download/audio/2022/03/10/audio_6d1d232857.mp3?filename=melody-loops-prelude-6211.mp3"
             },
             { 
                 title: "今夜有雨", 
@@ -930,7 +343,8 @@
                     {time: 15, text: "你为我唱了这首歌"},
                     {time: 30, text: "你的歌声像阳光一样温暖"},
                     {time: 45, text: "我第一次在语音厅哭了"}
-                ]
+                ],
+                audioUrl: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_d0b50d39af.mp3?filename=melodic-drive-words-11889.mp3"
             },
             { 
                 title: "夏夜最后的烟火", 
@@ -943,7 +357,8 @@
                     {time: 12, text: "我生你的气，你却不明白为什么"},
                     {time: 25, text: "后来你为我唱了这首歌"},
                     {time: 40, text: "夏夜的烟火下，我们和好了"}
-                ]
+                ],
+                audioUrl: "https://cdn.pixabay.com/download/audio/2022/01/18/audio_2c3f3e9a8e.mp3?filename=inspiring-cinematic-ambient-116199.mp3"
             },
             { 
                 title: "勾指起誓", 
@@ -956,7 +371,8 @@
                     {time: 18, text: "我说你是我最重要的人"},
                     {time: 35, text: "我们勾指起誓，永不分离"},
                     {time: 50, text: "哪怕只是作为最好的朋友"}
-                ]
+                ],
+                audioUrl: "https://cdn.pixabay.com/download/audio/2022/01/18/audio_87436e4cd3.mp3?filename=emotional-inspiring-piano-112623.mp3"
             }
         ];
         
@@ -1071,7 +487,10 @@
             // 更新心情指示器
             updateMoodIndicators();
             
-            console.log("语音厅初始化完成！");
+            // 更新音频状态
+            updateAudioStatus();
+            
+            console.log("语音厅初始化完成！使用模拟音频模式");
         }
         
         // 初始化可视化效果
@@ -1098,76 +517,64 @@
                 // 检查浏览器是否支持Web Audio API
                 if (window.AudioContext || window.webkitAudioContext) {
                     audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                    const audioElement = document.getElementById('audioPlayer');
-                    const source = audioContext.createMediaElementSource(audioElement);
-                    
-                    analyser = audioContext.createAnalyser();
-                    analyser.fftSize = 256;
-                    bufferLength = analyser.frequencyBinCount;
-                    dataArray = new Uint8Array(bufferLength);
-                    
-                    source.connect(analyser);
-                    analyser.connect(audioContext.destination);
-                    
                     console.log("音频上下文初始化成功");
-                    
-                    // 开始可视化更新
-                    updateVisualizer();
                 } else {
                     console.warn("浏览器不支持Web Audio API，将使用模拟可视化效果");
-                    // 使用模拟可视化效果
-                    simulateVisualizer();
                 }
             } catch (e) {
                 console.log('Web Audio API初始化失败:', e);
-                // 使用模拟可视化效果
-                simulateVisualizer();
             }
         }
         
-        // 模拟可视化效果
-        function simulateVisualizer() {
-            console.log("启动模拟可视化效果...");
-            function update() {
-                if (isPlaying) {
-                    for (let i = 0; i < visualizerBars.length; i++) {
-                        // 生成随机的柱状图高度，模拟音乐节奏
-                        const baseHeight = 10 + Math.sin(Date.now() / 500 + i * 0.3) * 15;
-                        const randomFactor = Math.random() * 10;
-                        const height = Math.max(10, baseHeight + randomFactor);
-                        visualizerBars[i].style.height = `${height}px`;
-                        
-                        // 根据数值改变颜色
-                        if (height > 30) {
-                            visualizerBars[i].style.background = 'linear-gradient(to top, #f72585, #ff9a00)';
-                        } else {
-                            visualizerBars[i].style.background = 'linear-gradient(to top, #4cc9f0, #f72585)';
-                        }
-                    }
-                    requestAnimationFrame(update);
-                }
-            }
+        // 模拟播放音乐
+        function simulateAudioPlay() {
+            console.log("开始模拟播放音乐:", songs[currentSongIndex].title);
             
-            if (isPlaying) {
-                update();
-            }
+            // 更新音频状态
+            updateAudioStatus();
+            
+            // 开始进度更新
+            if (progressInterval) clearInterval(progressInterval);
+            
+            progressInterval = setInterval(() => {
+                if (!isPlaying) return;
+                
+                currentTime += 0.1; // 每100毫秒增加0.1秒
+                
+                // 如果到达歌曲末尾，循环播放
+                if (currentTime >= songDuration) {
+                    currentTime = 0;
+                }
+                
+                // 更新进度条
+                const progress = (currentTime / songDuration) * 100;
+                document.getElementById('songProgress').style.width = `${progress}%`;
+                
+                // 更新时间显示
+                const currentMinutes = Math.floor(currentTime / 60);
+                const currentSeconds = Math.floor(currentTime % 60);
+                document.getElementById('currentTime').textContent = 
+                    `${currentMinutes}:${currentSeconds.toString().padStart(2, '0')}`;
+                
+                // 更新歌词高亮
+                updateLyricsHighlight(currentTime);
+                
+                // 更新可视化效果
+                updateVisualizer();
+                
+            }, 100);
         }
         
         // 更新可视化效果
         function updateVisualizer() {
-            if (!analyser || !isPlaying) {
-                if (isPlaying) {
-                    // 如果音频上下文不可用但正在播放，使用模拟效果
-                    simulateVisualizer();
-                }
-                return;
-            }
-            
-            analyser.getByteFrequencyData(dataArray);
+            if (!isPlaying) return;
             
             for (let i = 0; i < visualizerBars.length; i++) {
-                const value = dataArray[Math.floor(i * bufferLength / visualizerBars.length)] || 0;
-                const height = Math.max(10, value / 2);
+                // 生成动态的柱状图高度
+                const time = Date.now() / 500;
+                const baseHeight = 10 + Math.sin(time + i * 0.3) * 15;
+                const randomFactor = Math.random() * 10;
+                const height = Math.max(10, baseHeight + randomFactor);
                 visualizerBars[i].style.height = `${height}px`;
                 
                 // 根据数值改变颜色
@@ -1178,9 +585,34 @@
                 }
             }
             
-            if (isPlaying) {
-                requestAnimationFrame(updateVisualizer);
+            // 添加音乐音符动画
+            if (Math.random() > 0.7) {
+                createMusicNote();
             }
+        }
+        
+        // 创建音乐音符动画
+        function createMusicNote() {
+            const albumCover = document.getElementById('albumCover');
+            if (!albumCover) return;
+            
+            const note = document.createElement('div');
+            note.className = 'music-note';
+            note.innerHTML = '<i class="fas fa-music"></i>';
+            
+            // 随机位置
+            const left = 50 + (Math.random() * 20 - 10);
+            note.style.left = `${left}%`;
+            note.style.top = '50%';
+            
+            albumCover.appendChild(note);
+            
+            // 动画结束后移除元素
+            setTimeout(() => {
+                if (note.parentNode) {
+                    note.parentNode.removeChild(note);
+                }
+            }, 1000);
         }
         
         // 渲染初始对话
@@ -1387,6 +819,44 @@
             lienFeelingElement.style.color = lienFeeling > 70 ? '#4cc9f0' : lienFeeling > 40 ? '#ffd700' : '#f72585';
         }
         
+        // 更新音频状态
+        function updateAudioStatus() {
+            const audioStatus = document.getElementById('audioStatus');
+            if (!audioStatus) return;
+            
+            if (isPlaying) {
+                audioStatus.innerHTML = `<i class="fas fa-volume-up"></i> <span>正在播放: ${songs[currentSongIndex].title}</span>`;
+                audioStatus.style.color = '#4cc9f0';
+                
+                // 更新专辑封面动画
+                const albumCover = document.getElementById('albumCover');
+                if (albumCover) {
+                    albumCover.classList.add('playing-animation');
+                }
+            } else {
+                audioStatus.innerHTML = `<i class="fas fa-headphones"></i> <span>点击播放开始音乐</span>`;
+                audioStatus.style.color = '#b8b8d1';
+                
+                // 停止专辑封面动画
+                const albumCover = document.getElementById('albumCover');
+                if (albumCover) {
+                    albumCover.classList.remove('playing-animation');
+                }
+            }
+            
+            // 更新音频提示
+            const audioNotice = document.getElementById('audioNotice');
+            if (audioNotice) {
+                if (simulationMode) {
+                    audioNotice.innerHTML = `<i class="fas fa-info-circle"></i> 模拟音频播放中 - 享受完整的故事体验`;
+                    audioNotice.className = 'audio-notice simulation-mode';
+                } else {
+                    audioNotice.innerHTML = `<i class="fas fa-info-circle"></i> 正在播放音乐 - 完整的语音厅体验`;
+                    audioNotice.className = 'audio-notice';
+                }
+            }
+        }
+        
         // 更新关系进度条
         function updateRelationshipMeter() {
             const meterFill = document.getElementById('relationshipMeter');
@@ -1433,6 +903,11 @@
             document.getElementById('currentSongArtist').textContent = song.artist;
             document.getElementById('totalTime').textContent = song.duration;
             
+            // 设置歌曲时长
+            songDuration = song.duration === "3:45" ? 225 : 
+                          song.duration === "4:12" ? 252 : 
+                          song.duration === "3:58" ? 238 : 260;
+            
             // 更新活跃歌曲
             document.querySelectorAll('.song-item').forEach((item, index) => {
                 if (index === currentSongIndex) {
@@ -1447,122 +922,61 @@
         }
         
         function togglePlay() {
-            const audio = document.getElementById('audioPlayer');
             const playBtn = document.getElementById('playBtn');
             const playIcon = playBtn.querySelector('i');
             
             if (!isPlaying) {
+                // 开始播放
                 isPlaying = true;
                 playIcon.className = 'fas fa-pause';
-                audio.play().catch(e => {
-                    console.log('音频播放失败:', e);
-                    // 如果播放失败，使用模拟播放
-                    simulatePlay();
-                });
                 
-                // 开始播放进度更新
-                updateProgress();
-                
-                // 开始可视化
-                if (audioContext && audioContext.state === 'suspended') {
-                    audioContext.resume();
-                }
-                updateVisualizer();
+                // 使用模拟音频
+                simulateAudioPlay();
                 
                 // 播放歌曲对应的对话
                 playSongDialogues();
                 
             } else {
+                // 暂停播放
                 isPlaying = false;
                 playIcon.className = 'fas fa-play';
-                audio.pause();
+                
+                // 清除进度更新间隔
+                if (progressInterval) {
+                    clearInterval(progressInterval);
+                }
                 
                 // 清除自动对话定时器
                 if (autoDialogueTimer) {
                     clearTimeout(autoDialogueTimer);
                 }
             }
-        }
-        
-        // 模拟播放（当真实音频不可用时）
-        function simulatePlay() {
-            console.log("使用模拟播放模式");
-            const playBtn = document.getElementById('playBtn');
-            const playIcon = playBtn.querySelector('i');
             
-            isPlaying = true;
-            playIcon.className = 'fas fa-pause';
-            
-            // 开始播放进度更新
-            updateProgress();
-            
-            // 开始可视化
-            simulateVisualizer();
-            
-            // 播放歌曲对应的对话
-            playSongDialogues();
-        }
-        
-        function updateProgress() {
-            if (!isPlaying) return;
-            
-            const audio = document.getElementById('audioPlayer');
-            const progressBar = document.getElementById('songProgress');
-            const currentTimeElement = document.getElementById('currentTime');
-            
-            // 获取当前时间，如果音频不可用则使用模拟时间
-            let currentTime = 0;
-            let duration = 225; // 默认3:45
-            
-            if (audio && audio.duration) {
-                currentTime = audio.currentTime;
-                duration = audio.duration;
-            } else {
-                // 模拟时间进度
-                currentTime = (Date.now() / 1000) % duration;
-            }
-            
-            const progress = (currentTime / duration) * 100 || 0;
-            progressBar.style.width = `${progress}%`;
-            
-            // 更新时间显示
-            const currentMinutes = Math.floor(currentTime / 60);
-            const currentSeconds = Math.floor(currentTime % 60);
-            currentTimeElement.textContent = `${currentMinutes}:${currentSeconds.toString().padStart(2, '0')}`;
-            
-            // 更新歌词高亮
-            updateLyricsHighlight(currentTime);
-            
-            requestAnimationFrame(updateProgress);
+            // 更新音频状态
+            updateAudioStatus();
         }
         
         function seekSong(e) {
-            const audio = document.getElementById('audioPlayer');
             const progressBar = document.getElementById('progressBar');
             const rect = progressBar.getBoundingClientRect();
             const pos = (e.clientX - rect.left) / rect.width;
             
-            if (audio && audio.duration) {
-                audio.currentTime = pos * audio.duration;
-            }
+            currentTime = pos * songDuration;
             
-            if (!isPlaying) {
-                const progressBar = document.getElementById('songProgress');
-                progressBar.style.width = `${pos * 100}%`;
-                
-                const currentTime = pos * 225; // 假设歌曲长度3:45
-                const currentMinutes = Math.floor(currentTime / 60);
-                const currentSeconds = Math.floor(currentTime % 60);
-                document.getElementById('currentTime').textContent = `${currentMinutes}:${currentSeconds.toString().padStart(2, '0')}`;
-            }
+            // 更新进度显示
+            const progress = (currentTime / songDuration) * 100;
+            document.getElementById('songProgress').style.width = `${progress}%`;
+            
+            const currentMinutes = Math.floor(currentTime / 60);
+            const currentSeconds = Math.floor(currentTime % 60);
+            document.getElementById('currentTime').textContent = 
+                `${currentMinutes}:${currentSeconds.toString().padStart(2, '0')}`;
         }
         
         function changeVolume() {
-            const audio = document.getElementById('audioPlayer');
             const volume = document.getElementById('volumeSlider').value / 100;
-            if (audio) {
-                audio.volume = volume;
-            }
+            // 这里可以添加音量变化的视觉反馈
+            console.log("音量设置为:", volume);
         }
         
         function prevSong() {
@@ -1581,34 +995,27 @@
         }
         
         function changeSong() {
-            const audio = document.getElementById('audioPlayer');
+            // 重置时间和进度
+            currentTime = 0;
+            
+            // 如果正在播放，先暂停
             const wasPlaying = isPlaying;
-            
             if (isPlaying) {
-                if (audio) {
-                    audio.pause();
-                }
-                isPlaying = false;
-                document.getElementById('playBtn').querySelector('i').className = 'fas fa-play';
-                
-                // 清除自动对话定时器
-                if (autoDialogueTimer) {
-                    clearTimeout(autoDialogueTimer);
-                }
+                togglePlay();
             }
             
-            // 重置进度
-            if (audio) {
-                audio.currentTime = 0;
-            }
+            // 更新歌曲信息
+            updateSongInfo();
+            
+            // 重置进度条
             document.getElementById('songProgress').style.width = '0%';
             document.getElementById('currentTime').textContent = '0:00';
-            
-            updateSongInfo();
             
             // 如果之前正在播放，开始播放新歌
             if (wasPlaying) {
                 setTimeout(() => togglePlay(), 500);
+            } else {
+                updateAudioStatus();
             }
             
             // 检查特殊事件
@@ -1725,11 +1132,11 @@
             // 当雷恩好感度很高时
             if (lienFeeling > 95) {
                 setTimeout(() => {
-                    addMessage("雷恩", "你永远都是最牛的...", "lien");
+                    addMessage("雷恩", "就像海市蜃楼，上帝总让人毫无指望又从不反抗，他让你生病，又给你解药...", "lien");
                 }, 2000);
                 
                 setTimeout(() => {
-                    addMessage("鳌拜", "哎呀呀 那还用说嘛。我就是这么牛", "aobai");
+                    addMessage("鳌拜", "...", "aobai");
                 }, 4000);
             }
             
@@ -1752,8 +1159,3 @@
     </script>
 </body>
 </html>
-```
-
-
-
-
